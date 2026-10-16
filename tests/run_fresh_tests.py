@@ -8,6 +8,7 @@ import hashlib
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 screenshots_dir = os.path.join(base_dir, 'screenshots')
+test_module_dir = os.path.join(base_dir, 'test_module')
 
 print("1. Cleaning up existing screenshots...")
 for m in range(1, 11):
@@ -20,7 +21,7 @@ print("\n2. Executing all module tests (Module 1 to 10)...")
 modules = [f"test_module{i}.py" for i in range(1, 11)]
 
 for mod in modules:
-    mod_path = os.path.join(base_dir, mod)
+    mod_path = os.path.join(test_module_dir, mod)
     if os.path.exists(mod_path):
         print(f"\n==================== Running {mod} ====================")
         res = subprocess.run([sys.executable, mod_path], capture_output=True, text=True, encoding='utf-8', errors='replace')
