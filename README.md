@@ -1,442 +1,363 @@
-# F&G Food - Inventory & Production Management System
+<div align="center">
 
-## 1. Giới thiệu
-Đây là hệ thống quản lý kho, chất lượng và sản xuất cho doanh nghiệp thực phẩm F&G, được xây dựng dưới dạng web application bằng PHP + MySQL, tập trung vào việc số hóa quy trình từ nhập nguyên liệu, kiểm tra chất lượng, cấp phát nguyên vật liệu, sản xuất, đến lưu trữ sản phẩm thành phẩm.
+# F&G: Food Inventory & Production Management System
 
-Hệ thống này mang mục tiêu chính là:
-- kiểm soát tồn kho theo thời gian thực,
-- giảm sai sót trong quy trình nhập/xuất nguyên liệu,
-- hỗ trợ kiểm tra chất lượng QC,
-- quản lý sản xuất theo lô và theo ca làm việc,
-- cung cấp báo cáo, dashboard và trợ lý AI cho người dùng.
+### Enterprise-Grade Inventory Tracking, Quality Control, Shift Production & Automated FEFO Dispatch
+
+**End-to-End Digital Traceability — From Raw Ingredient Intake to Finished Goods Dispatch**
+
+[![PHP Version](https://img.shields.io/badge/PHP-8.1%20%7C%208.2-777bb4?style=flat-square&logo=php&logoColor=white)](#system-architecture)
+[![Database](https://img.shields.io/badge/MySQL-8.0%20%7C%20MariaDB-4479A1?style=flat-square&logo=mysql&logoColor=white)](#system-architecture)
+[![Frontend](https://img.shields.io/badge/UI-TailwindCSS%20%7C%20Bootstrap%205-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](#system-architecture)
+[![Test Suite](https://img.shields.io/badge/Selenium%20Tests-86%20Passing-success?style=flat-square&logo=selenium&logoColor=white)](#automated-testing--qa-evidence)
+[![Automation](https://img.shields.io/badge/Automation-n8n%20Workflows-EA4B71?style=flat-square&logo=n8n&logoColor=white)](#api--n8n-automation)
+[![AI Integration](https://img.shields.io/badge/AI%20Assistant-Groq%20%7C%20Gemini-FF6F00?style=flat-square&logo=google&logoColor=white)](#core-capabilities)
+[![Bilingual](https://img.shields.io/badge/i18n-English%20%7C%20Tiếng%20Việt-blue?style=flat-square)](#core-capabilities)
+[![License](https://img.shields.io/badge/license-MIT-green?style=flat-square)](#license)
+
+<br/>
+
+**[Quick Start](#quick-start) · [Key Features](#key-features) · [System Architecture](#system-architecture) · [Role-Based Access](#role-based-access-control-rbac) · [Automated Testing](#automated-testing--qa-evidence) · [n8n Automation](#api--n8n-automation) · [Troubleshooting](#troubleshooting--faq)**
+
+<br/>
+
+```bash
+git clone https://github.com/hoangcamanh/F-G_Food-Inventory-Production-Management-System.git
+```
+
+</div>
+
+> [!IMPORTANT]
+> **Production & Academic Deployment Notice**:
+> This platform is engineered for food manufacturing facilities subject to strict regulatory compliance, perishable shelf-life tracking, and hazard prevention (HACCP). Default credentials for demo evaluation are provided in the [Role-Based Access Control](#role-based-access-control-rbac) section. Ensure MySQL 8.x+ and PHP 8.1+ with PDO extensions are active before launching.
+
+<div align="center">
+
+### System Interface Showcase
+
+| Warehouse Management & Real-time Stock | Quality Control & Inspection Station |
+| :---: | :---: |
+| <img src="tests/screenshots/module3/TC_WH_01_Evidence.png" alt="Warehouse Dashboard" width="550"/> | <img src="tests/screenshots/module6/TC_QC_01_QC_Evidence.png" alt="QC Inspection Dashboard" width="550"/> |
+| **Production FEFO Allocation Engine** | **Executive Analytics & Waste Attribution** |
+| <img src="tests/screenshots/module7/TC_PROD_01_Evidence.png" alt="Production FEFO Engine" width="550"/> | <img src="tests/screenshots/module8/TC_ANALYTICS_01_Evidence.png" alt="Production Analytics" width="550"/> |
+
+</div>
 
 ---
 
-## 2. Mục tiêu và phạm vi hệ thống
-Hệ thống phù hợp cho mô hình sản xuất thực phẩm có đặc thù như:
-- nhiều SKU nguyên liệu và thành phẩm,
-- cần theo dõi ngày hết hạn, lô hàng, khu vực lưu trữ,
-- yêu cầu kiểm tra chất lượng đầu vào trước khi cho vào sản xuất,
-- cần kiểm soát lượng tồn kho, mức cảnh báo, và báo cáo theo thời gian.
+## Executive Overview
 
-Các chức năng chính bao gồm:
-- Quản lý tài khoản người dùng theo vai trò,
-- Quản lý kho và tồn kho nguyên liệu,
-- Theo dõi số lượng, vị trí lưu trữ, batch, FEFO,
-- Kiểm định chất lượng (QC), ghi nhận lỗi / phế phẩm / hao hụt,
-- Yêu cầu nguyên liệu và cấp phát cho sản xuất,
-- Theo dõi sản xuất / finished goods,
-- Bảng điều khiển báo cáo và analytics,
-- Hệ thống thông báo và n8n automation,
-- AI chatbot truy vấn dữ liệu bằng ngôn ngữ tự nhiên.
+Food and beverage processing operations face stringent regulatory requirements, narrow operating margins, and the perpetual hazard of raw material spoilage. Traditional manual logging methods fail to enforce FIFO/FEFO consistency, resulting in avoidable waste, delayed recall responses, and audit compliance failures.
+
+**F&G Food Inventory & Production Management System** resolves these challenges by introducing an end-to-end digital nervous system designed specifically for food manufacturing:
+- **Zero-Waste Dispatch**: Automated First-Expired, First-Out (FEFO) algorithms guarantee near-expiry stock prioritization.
+- **Strict Quality Gates**: Quarantined raw materials require rigorous QC inspection approval before production line allocation.
+- **Full-Chain Traceability**: Every finished SKU maps directly to the specific raw material batch, operator, inspection certificate, and production shift.
+- **Executive Visibility**: Instant waste cost attribution, scrap valuation, and real-time operational KPI dashboards.
 
 ---
 
-## 3. Cấu trúc dự án
+## Key Features
+
+### 1. Raw Material Inventory & Multi-Zone Warehouse Management
+* **Real-time Inventory Ledger**: Live balance tracking categorized by category, supplier, batch code, and storage location.
+* **Multi-Zone Segregation**: Distinct physical zone mapping (Dry Storage, Cold Storage, Frozen Vault, Quarantine Area).
+* **Automated Stock Movements**: Automatic debit/credit audit trail for every stock-in, QC clearance, allocation, and write-off.
+* **Low Stock & Expiry Telemetry**: Instant visual warnings for critical stock thresholds and upcoming shelf-life limits.
+
+### 2. Automated FEFO (First-Expired, First-Out) Dispatch Engine
+* **Intelligent Batch Allocation**: System queries active batches and strictly enforces dispatch sorted by expiration date (`EXP_DATE ASC`).
+* **Spoilage Prevention Matrix**: Prevents newer batches from being committed while older viable stock remains in storage.
+* **Weather-Aware In-Storage Warnings**: Real-time integration with ambient weather data alerts staff to humidity and heat risks on sensitive food supplies.
+
+### 3. Quality Control (QC) & Inspection Gateway
+* **Mandatory Intake Inspection**: Incoming goods remain in `Quarantined` state until verified by a QC specialist.
+* **Defect Grading & Yield Calculation**: Standardized testing protocols recording sample size, defect quantity, defect classification, and calculated yield percentage.
+* **Auto-Rejection Governance**: Automatic status transition to `Rejected` whenever sample yield drops below corporate tolerance thresholds (< 80%).
+
+### 4. Production Batching, Shift Management & Yield Tracking
+* **Material Requisitions**: Production Managers submit requisitions with automated stock validation against warehouse ledgers.
+* **Shift-Aware Tracking**: Automatic real-time detection of operational warehouse shifts (Morning, Afternoon, Night) based on local timestamps.
+* **Yield & Throughput Analytics**: Input-to-output conversion monitoring identifying production bottlenecks and resource wastage.
+
+### 5. Finished Goods Declaration & QR Traceability
+* **Shift-Closing Workflows**: Standardized declaration of completed product quantities, target lots, and operator verification.
+* **Bidirectional Traceability**: QR code generation providing instantaneous backward and forward pedigree lookups from farm to fork.
+
+### 6. Financial Intelligence & Waste Cost Attribution
+* **Scrap & Waste Quantification**: Automated calculation of monetary loss resulting from QC rejections and expired disposals.
+* **Supplier Quality Scorecards**: Historical vendor reliability metrics highlighting rejection rates per supplier.
+
+### 7. AI Chatbot & Natural Language SQL Assistant
+* **Conversational Warehouse Queries**: Query stock balances, expiring batches, and production metrics using plain Vietnamese or English.
+* **Multi-LLM Integration**: Built-in support for **Groq (Llama-3)**, **Google Gemini 1.5**, and **OpenRouter** providers.
+
+### 8. n8n Enterprise Automation & Event Webhooks
+* **Automated Email Notifications**: Periodic executive summary emails and instant critical alerts dispatched via webhook triggers.
+* **Plug-and-Play JSON Workflows**: Pre-configured n8n workflows for immediate deployment in Docker or self-hosted environments.
+
+### 9. Bilingual Localization (EN / VI) Engine
+* **Instant Language Toggle**: Seamless switching between Vietnamese and English across all UI labels, form validations, error modals, and database reference lookups.
+
+---
+
+## Role-Based Access Control (RBAC)
+
+The system implements strict permission segregation across 4 dedicated organizational roles:
+
+| Role | Default Username | Default Password | Initial Landing Page | Core Responsibilities |
+| :--- | :--- | :--- | :--- | :--- |
+| **Director** | `director_demo` | `123456` | `frontend/dashboard_director.php` | High-level KPI dashboards, financial waste attribution, plant-wide yield metrics, executive audits. |
+| **Production Manager** | `pm_alex` | `123456` | `frontend/dashboard_production.php` | Material requisitioning, FEFO batch allocation, shift production tracking, finished goods sign-off. |
+| **Warehouse Staff** | `wh_admin04` | `123456` | `frontend/dashboard_warehouse.php` | Stock intake, batch registration, zone management, material issue dispatch, physical inventory audits. |
+| **Quality Control (QC)** | `nhung_thuy` | `123456` | `frontend/qc_dashboard.php` | Raw material sampling, inspection verification, defect logging, quarantine approvals, rejection reporting. |
+
+---
+
+## System Architecture
 
 ```text
-Capstone_Project_2/
-├── .env                          # Cấu hình môi trường, API key
-├── README.md                    # Hướng dẫn dự án
-├── Project2_db.sql              # Schema database chính
-├── seed_data.sql                # Dữ liệu mẫu / mock data
-├── mock_data.sql                # Dữ liệu bổ sung (nếu có)
-├── automaticallyMail.n8n        # Workflow n8n mẫu
-├── backend/
-│   ├── api/                     # API phục vụ UI / chatbot / notification
-│   ├── connection/              # File xử lý login, logout, DB, business actions
-│   ├── controllers/             # Controller logic
-│   ├── core/                    # Base model / common classes
-│   ├── helpers/                 # Helper cho n8n, config, docs
-│   ├── includes/                # Auth, i18n, utilities
-│   ├── models/                  # Model thao tác DB
-│   ├── services/                # Service Weather / notification / logic nghiệp vụ
-│   └── lang/                    # File ngôn ngữ / translations
-├── frontend/
-│   ├── includes/                # Giao diện dùng chung
-│   ├── *.php                    # Trang dashboard, quản lý kho, QC, sản xuất, login
-│   └── assets/                  # CSS/JS/static assets
-├── image/                       # Hình ảnh hệ thống / ảnh tĩnh
-├── screenshots_by_module/       # Hình ảnh demo cho từng module
-├── n8n_workflows/              # Workflow n8n JSON + docs
-├── tests/                       # Test script, automated checks
-└── vendor/ or dependencies      # tùy môi trường cài đặt thêm
+       CLIENT LAYER (Browser)
+       ┌────────────────────────────────────────────────────────┐
+       │   HTML5 · Tailwind CSS · Bootstrap 5 · Chart.js · QR   │
+       │           Instant Bilingual Localization (EN/VI)       │
+       └───────────────────────────┬────────────────────────────┘
+                                   │ HTTP / JSON REST
+       APPLICATION LAYER (Backend PHP 8.x)
+       ┌───────────────────────────▼────────────────────────────┐
+       │  [Controllers]        [Services]        [Core Auth]    │
+       │  • MaterialRequest    • WeatherService  • Session/RBAC │
+       │  • StockController    • Notification    • Security     │
+       │  • QcController       • AI Bridge       • i18n Engine  │
+       └───────────────────────────┬────────────────────────────┘
+                                   │ PDO Prepared Queries
+       PERSISTENCE LAYER (MySQL 8.x)
+       ┌───────────────────────────▼────────────────────────────┐
+       │  USERS · BATCHES · PRODUCTS · SUPPLIERS · INSPECTIONS  │
+       │  STOCK_MOVEMENTS · FINISHED_GOODS · MATERIAL_REQUESTS  │
+       └────────────────────────────────────────────────────────┘
 ```
+
+### Technology Stack Specifications
+
+| Tier | Technology | Specification / Purpose |
+| :--- | :--- | :--- |
+| **Backend Runtime** | PHP 8.1 / 8.2 | MVC architecture, strict typed methods, PDO prepared statements, RESTful JSON endpoints. |
+| **Database Engine** | MySQL 8.0 / MariaDB 10.4+ | Relational schema with strict foreign keys, indexing on batch lot codes, and UTF-8 collation. |
+| **Frontend Framework** | Tailwind CSS & Bootstrap 5 | Modern, responsive interface with Dark/Light accenting, dynamic modals, and interactive data tables. |
+| **Data Visualization** | Chart.js 4.x | Real-time yield line charts, waste cost bar charts, and inventory distribution pie charts. |
+| **Workflow Automation** | n8n Workflow Automation | Webhook ingestion, automated email dispatch, and scheduled batch expiry triggers. |
+| **Artificial Intelligence** | Groq API / Google Gemini API | Natural language prompt parsing into contextual SQL data summaries. |
+| **Testing Framework** | Python 3.10+ & Selenium | End-to-end automated test suite verifying all 10 core business modules with screenshot evidence. |
 
 ---
 
-## 4. Công nghệ sử dụng
-- PHP 7.4+ / 8.x
-- MySQL / MariaDB
-- Apache via XAMPP
-- PDO cho kết nối database
-- HTML + CSS + JavaScript
-- Tailwind CSS cho giao diện
-- n8n cho automation workflow
-- AI API: Groq / Gemini / OpenRouter (nếu cấu hình)
-- Weather API cho dashboard thời tiết
+## Quick Start
 
----
+### 1. Prerequisites Checklist
+- **Web Server**: Apache 2.4+ (bundled with [XAMPP](https://www.apachefriends.org/) or standalone)
+- **PHP**: Version 8.1 or higher (extensions required: `pdo`, `pdo_mysql`, `curl`, `mbstring`, `openssl`)
+- **Database**: MySQL 8.0+ or MariaDB 10.4+
+- **Python**: Version 3.10+ (for running automated test suites)
+- **Web Browser**: Google Chrome or Microsoft Edge
 
-## 5. Yêu cầu hệ thống
-Trước khi chạy dự án, cần chuẩn bị:
-- XAMPP / WAMP / MAMP
-- Apache bật và MySQL chạy
-- PHP đã cài đặt tương thích
-- Trình duyệt Chrome/Edge/Firefox hiện đại
-- Kết nối internet nếu cần dùng AI API / Weather API
+### 2. Installation & Setup
 
----
-
-## 6. Cài đặt và khởi chạy
-
-### 6.1. Clone / đặt project vào thư mục làm việc
-Đặt thư mục project vào thư mục htdocs của XAMPP, ví dụ:
-
-```text
-C:\xampp\htdocs\Capstone_Project_2\Capstone_Project_2
+#### Step 1: Clone the Repository
+Clone into your web server's document root (e.g., `C:/xampp/htdocs/`):
+```bash
+cd C:/xampp/htdocs
+git clone https://github.com/hoangcamanh/F-G_Food-Inventory-Production-Management-System.git
+cd F-G_Food-Inventory-Production-Management-System
 ```
 
-### 6.2. Khởi động môi trường
-- Mở XAMPP Control Panel
-- Bật Apache
-- Bật MySQL
+#### Step 2: Initialize the Database
+1. Launch **XAMPP Control Panel** and start **Apache** and **MySQL**.
+2. Open **phpMyAdmin** at `http://localhost/phpmyadmin`.
+3. Create a new database named `Project2_db`:
+   ```sql
+   CREATE DATABASE Project2_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   ```
+4. Import the schema and seed datasets sequentially:
+   - File 1: `Project2_db.sql` (Creates core tables, foreign keys, and indexes)
+   - File 2: `seed_data.sql` (Inserts realistic demo products, batches, suppliers, shifts, and accounts)
 
-### 6.3. Tạo database
-Vào phpMyAdmin:
-
-```text
-http://localhost/phpmyadmin
-```
-
-Tạo database mới với tên:
-
-```sql
-CREATE DATABASE Project2_db;
-```
-
-### 6.4. Import dữ liệu
-Import theo thứ tự:
-1. `Project2_db.sql`
-2. `seed_data.sql`
-
-Lưu ý:
-- Nếu hệ thống có dữ liệu demo theo role và tài khoản, `seed_data.sql` nên được import sau schema chính.
-- Nếu có lỗi password hash hoặc mật khẩu không khớp, có thể chạy script bổ trợ trong `backend/connection/fix_pass.php` hoặc kiểm tra lại dữ liệu người dùng.
-
-### 6.5. Cấu hình .env
-File `.env` nằm ở thư mục gốc dự án. Nội dung ví dụ:
-
+#### Step 3: Configure Environment Variables
+Copy or edit `.env` in the project root:
 ```env
-WEATHER_API_KEY=your_weather_api_key
+# Ambient Weather Telemetry
+WEATHER_API_KEY=your_openweather_api_key
+
+# Generative AI & Natural Language SQL Assistant
 GROQ_API_KEY=your_groq_api_key
 GEMINI_API_KEY=your_gemini_api_key
 OPENROUTER_API_KEY=your_openrouter_api_key
+
+# n8n Automation Webhooks
 N8N_WEBHOOK_BASE_URL=http://localhost:5678/webhook
 ```
 
-Nếu không sử dụng AI hoặc Weather API, hệ thống vẫn có thể chạy ở mức chức năng core, nhưng một số module có thể bị hạn chế hoặc hiển thị lỗi khi gọi API.
-
-### 6.6. Cấu hình kết nối database
-File kết nối mặc định nằm tại:
-
+#### Step 4: Verify Database Connection
+Verify that database credentials in `backend/connection/db_connect.php` match your local environment:
 ```php
-backend/connection/db_connect.php
+$host     = 'localhost';
+$db       = 'Project2_db';
+$user     = 'root';
+$pass     = '';
+$charset  = 'utf8mb4';
 ```
 
-Mặc định của XAMPP là:
-- host: localhost
-- user: root
-- password: ""
-- database: Project2_db
-
-Nếu bạn đang dùng môi trường khác, cần cập nhật các thông số trong file này tương ứng.
+#### Step 5: Launch the Application
+Open your browser and navigate to:
+```text
+http://localhost/F-G_Food-Inventory-Production-Management-System/frontend/login.php
+```
+*Log in using any of the demo accounts listed in the [Role-Based Access Control](#role-based-access-control-rbac) table.*
 
 ---
 
-## 7. Chạy ứng dụng
-Sau khi database và cấu hình đã sẵn sàng, truy cập:
+## Automated Testing & QA Evidence
+
+The platform includes a test automation suite powered by **Python** and **Selenium WebDriver**, covering 86 end-to-end test cases across 10 distinct modules. Every single test execution automatically logs visual proof into `tests/screenshots/`.
 
 ```text
-http://localhost/Capstone_Project_2/Capstone_Project_2/frontend/login.php
+tests/
+├── run_all_tests.py            # Master Test Runner (Executes all 10 modules sequentially)
+├── run_fresh_tests.py          # Fresh Runner (Flushes screenshots and re-executes clean suite)
+├── screenshots/                # Comprehensive image evidence repository
+│   ├── module1/ ... module10/  # Organized by functional module
+└── test_module/                # Modular test scripts
+    ├── test_module1.py         # Module 1: Authentication & Role Authorization (10 TCs)
+    ├── test_module2.py         # Module 2: Environment & Master Data Setup (6 TCs)
+    ├── test_module3.py         # Module 3: Warehouse Dashboard & Live Alerts (6 TCs)
+    ├── test_module4.py         # Module 4: Inventory Ledger & Zone Filtering (10 TCs)
+    ├── test_module5.py         # Module 5: Stock-In, Update, Delete & Movements (11 TCs)
+    ├── test_module6.py         # Module 6: QC Dashboard, Defect Logging & Inspections (13 TCs)
+    ├── test_module7.py         # Module 7: Production Dashboard, Allocation & FEFO (10 TCs)
+    ├── test_module8.py         # Module 8: Finished Goods Declaration & Analytics (8 TCs)
+    ├── test_module9.py         # Module 9: Material Request Workflow & Reports UI (7 TCs)
+    └── test_module10.py        # Module 10: Performance, Responsiveness & Stress (5 TCs)
 ```
 
-Hoặc nếu bạn đặt dự án tại ví dụ khác, thay đường dẫn tương ứng.
-
----
-
-## 8. Tài khoản demo / đăng nhập mẫu
-Các tài khoản demo được tạo sẵn trong `seed_data.sql` với role tương ứng. Mật khẩu mặc định trong hệ thống đang dùng chung là:
-
-```text
-123456
-```
-
-Danh sách tài khoản mẫu:
-
-| Vai trò | Username | Mật khẩu | Trang sau khi đăng nhập |
-|---|---|---|---|
-| Production Manager | pm_alex | 123456 | dashboard_production.php |
-| QC | nhung_thuy | 123456 | qc_dashboard.php |
-| Warehouse Staff | wh_admin04 | 123456 | dashboard_warehouse.php |
-| Director | director_demo | 123456 | dashboard_director.php |
-
-Lưu ý:
-- Hệ thống dùng `USR_role` trong DB để phân quyền.
-- File `backend/connection/process_login.php` sẽ xác định role và redirect đến dashboard tương ứng.
-
----
-
-## 9. Phân quyền người dùng
-Hệ thống được thiết kế theo mô hình RBAC (Role-Based Access Control), bao gồm các vai trò chính:
-
-### 9.1. Warehouse_Staff
-- Quản lý kho nguyên liệu
-- Nhập kho / cập nhật lô hàng
-- Theo dõi vị trí lưu trữ
-- Xem dashboard kho, báo cáo tồn kho
-- Thực hiện điều chỉnh / xử lý dữ liệu tồn kho
-
-### 9.2. QC
-- Kiểm tra nguyên liệu đầu vào
-- Ghi nhận lỗi, phế phẩm, hao hụt
-- Chốt đánh giá QC và báo cáo chất lượng
-- Theo dõi tiến độ QC
-
-### 9.3. Production_Manager
-- Yêu cầu nguyên liệu sản xuất
-- Phân bổ lô phù hợp cho dây chuyền
-- Theo dõi tiến độ sản xuất
-- Quản lý yield, material allocation, production analytics
-
-### 9.4. Director
-- Xem dashboard tổng quan
-- Đánh giá KPI / báo cáo cấp cao
-- Theo dõi hiệu suất toàn hệ thống
-- Có quyền xem dữ liệu báo cáo cấp quản lý
-
----
-
-## 10. Quy trình vận hành thực tế của hệ thống
-
-### 10.1. Quy trình nhập kho
-1. Warehouse Staff đăng nhập.
-2. Vào module kho / inventory.
-3. Thêm hoặc cập nhật batch nguyên liệu.
-4. Gán vị trí lưu trữ, thông tin số lượng, hạn sử dụng, mốc thời gian nhận hàng.
-5. Lưu dữ liệu vào bảng `BATCHES` và `STOCK_MOVEMENTS`.
-
-### 10.2. Quy trình QC
-1. QC truy cập dashboard QC.
-2. Chọn batch cần kiểm tra.
-3. Kiểm tra chất lượng đầu vào, ghi nhận lỗi / phế phẩm / tỷ lệ reject.
-4. Cập nhật trạng thái batch và kết quả đánh giá.
-5. Nếu đạt chuẩn, cho phép batch đi vào sản xuất; nếu không, đưa vào trạng thái lỗi hoặc cần xử lý.
-
-### 10.3. Quy trình yêu cầu nguyên liệu và sản xuất
-1. Production Manager tạo request material.
-2. Hệ thống kiểm tra tồn kho và lô hàng còn khả dụng.
-3. Chọn batch phù hợp theo tiêu chí FEFO / expiry / stock matching.
-4. Giao nguyên liệu cho dây chuyền.
-5. Theo dõi tiến độ, yield và lượng thành phẩm thu được.
-
-### 10.4. Quy trình xuất kho / hoàn thành sản phẩm
-- Sau sản xuất, finished goods được ghi nhận vào hệ thống.
-- Có thể đưa vào trạng thái quarantine, ready to ship, hoặc rejected tùy nghiệp vụ.
-- Hệ thống giữ nhật ký bằng bảng `STOCK_MOVEMENTS`, `FINISHED_GOODS`, `MATERIAL_ALLOCATIONS`.
-
----
-
-## 11. Các module chính trong hệ thống
-
-### 11.1. Dashboard Warehouse
-- Tổng quan tồn kho, lượng nhập / xuất, batch đang hoạt động
-- Cảnh báo tồn kho thấp
-- Hiển thị các dòng dữ liệu nhất định theo thời gian thực
-
-### 11.2. Inventory / Stock Management
-- Quản lý lô hàng, vị trí lưu trữ, số lượng, hạn sử dụng
-- Tìm kiếm batch theo mã sản phẩm, ngày, khu vực
-- Theo dõi lịch sử movement
-
-### 11.3. QC Dashboard
-- Xem danh sách batch chờ QC
-- Đánh giá chất lượng và xử lý reject reason
-- Tạo báo cáo QC
-
-### 11.4. Production FEFO / Material Allocation
-- Chọn nguyên liệu phù hợp theo FEFO
-- Cấp phát vật tư cho dây chuyền
-- Giảm rủi ro hết hạn hoặc sản xuất sai nguyên liệu
-
-### 11.5. Production Analytics
-- Hiển thị yield, throughput, hiệu suất tồn kho
-- Theo dõi sản xuất trong các chu kỳ khác nhau
-
-### 11.6. Reports & Security UI
-- Báo cáo xuất nhập kho, QC, sản xuất
-- Dashboard quản lý, báo cáo tổng thể
-- Giao diện có thể được dùng làm chứng minh cho dự án và demo
-
-### 11.7. AI Chatbot
-- Người dùng có thể tương tác bằng ngôn ngữ tự nhiên
-- Chatbot chuyển câu hỏi thành truy vấn SQL / logic dữ liệu
-- Hiện đang hỗ trợ các provider như Groq, Gemini, OpenRouter tùy cấu hình
-
-### 11.8. n8n Automation
-- Gửi email báo cáo tổng hợp theo định kỳ
-- Có thể tích hợp alert / notification trên webhook
-- Workflow mẫu nằm trong thư mục `n8n_workflows/` và `automaticallyMail.n8n`
-
----
-
-## 12. Cách sử dụng hệ thống từng vai trò
-
-### 12.1. Với Warehouse Staff
-- Đăng nhập bằng tài khoản warehouse
-- Kiểm tra tồn kho và nhập Kho
-- Cập nhật batch / vị trí lưu trữ
-- Theo dõi lịch sử stock movements
-- Xử lý các batch hết hạn, thiếu hàng, tồn kho bất thường
-
-### 12.2. Với QC
-- Mở dashboard QC
-- Chọn batch cần kiểm tra
-- Ghi nhận kết quả kiểm tra
-- Nếu không đạt, update rejection reason và trạng thái batch
-- Theo dõi chỉ số chất lượng theo ngày / ca / nhà cung cấp
-
-### 12.3. Với Production Manager
-- Vào dashboard sản xuất
-- Tạo material request hoặc allocate batch
-- Theo dõi lô, tiến độ, nhịp sản xuất, yield
-- Quyết định nguyên liệu nào phù hợp để cấp cho dây chuyền
-
-### 12.4. Với Director
-- Xem dashboard tổng quan
-- Nhận KPI và báo cáo theo cấp quản lý
-- Đánh giá hiệu suất kho / QC / sản xuất
-- Dùng cho mục tiêu executive summary
-
----
-
-## 13. Hướng dẫn vận hành và bảo trì
-
-### 13.1. Backup database
-Nên backup trước khi import dữ liệu mới hoặc chạy fix scripts.
+### Running the Test Suite
 
 ```bash
-mysqldump -u root -p Project2_db > backup_project2.sql
+# 1. Install Python test dependencies
+pip install selenium webdriver-manager
+
+# 2. Execute the entire test suite (all 10 modules, 86 test cases)
+python tests/run_all_tests.py
+
+# 3. Or run fresh tests with screenshot flush
+python tests/run_fresh_tests.py
 ```
 
-### 13.2. Reset dữ liệu mẫu
-Nếu cần làm lại môi trường demo:
-1. Xóa database `Project2_db`
-2. Tạo lại database mới
-3. Import `Project2_db.sql`
-4. Import `seed_data.sql`
+---
 
-### 13.3. Chạy script sửa lỗi
-Trong thư mục `backend/connection` có các file helper như:
-- `fix_pass.php`
-- `fix_all_en_translations.php`
-- `fix_qc_reasons.php`
-- `fix_shifts_data.php`
+## API & n8n Automation
 
-Dùng cho mục đích sửa hash/password, chuẩn hóa dữ liệu hoặc cập nhật dữ liệu phụ trợ.
+Pre-built workflow configurations are provided in `n8n_workflows/` to handle enterprise notification dispatching:
+- **`flow1_realtime_critical_alerts.json`**: Listens for HTTP POST triggers from `backend/helpers/n8n_helper.php` when critical inventory levels or QC auto-rejections occur. Dispatches immediate warning emails to plant supervisors.
+- **`flow2_weekly_summary_flow.json`**: Scheduled cron trigger fetching weekly yield analytics and stock movement volume, generating an executive HTML digest for the plant Director.
 
-### 13.4. Chạy kiểm thử
-Thư mục `tests/` chứa các script kiểm thử như:
-- `test_auth.py`
-- `test_login.py`
-- `test_module*.py`
-- `run_all_tests.py`
-
-Có thể chạy theo cú pháp Python tương ứng.
+### Triggering Manual Test Webhooks:
+```bash
+curl -X POST http://localhost:5678/webhook/test-alert \
+     -H "Content-Type: application/json" \
+     -d '{"event":"CRITICAL_STOCK_EXPIRY","batch_id":"BATCH-2026-004","product":"Skimmed Milk Powder","days_remaining":2}'
+```
 
 ---
 
-## 14. Một số lỗi thường gặp và cách xử lý
+## Project Structure
 
-### 14.1. Không vào được trang đăng nhập
-- Kiểm tra Apache đã chạy chưa.
-- Kiểm tra đường dẫn file PHP và URL đúng.
-- Kiểm tra database `Project2_db` đã được import chưa.
-
-### 14.2. Lỗi kết nối database
-- Kiểm tra file `backend/connection/db_connect.php`
-- Đảm bảo user `root`, password rỗng hoặc đúng cấu hình local
-- Kiểm tra MySQL đang chạy trên port 3306
-
-### 14.3. Lỗi login / sai mật khẩu
-- Xác nhận username có tồn tại trong bảng `USERS`
-- Nếu mật khẩu bị lỗi hash, kiểm tra `fix_pass.php`
-- Đảm bảo user đang có `USR_is_active = 1`
-
-### 14.4. API AI / Weather không hoạt động
-- Kiểm tra file `.env`
-- Đảm bảo key hợp lệ và không bị thiếu chữ/chấm
-- Kiểm tra Internet / API quota
-
-### 14.5. Dashboard không tải dữ liệu
-- Kiểm tra xem bảng `BATCHES`, `STOCK_MOVEMENTS`, `QC_INSPECTIONS` đã có dữ liệu hay chưa
-- Đảm bảo import `seed_data.sql` và schema đúng
-
----
-
-## 15. Hướng dẫn demo và trình bày đồ án
-Khi trình bày đồ án, nên theo flow sau:
-
-1. Đăng nhập bằng tài khoản demo
-2. Hiển thị dashboard warehouse / QC / production
-3. Chứng minh quy trình nhập kho
-4. Chứng minh QC inspection
-5. Chứng minh request material và material allocation
-6. Hiển thị dashboard analytics và report
-7. Demo AI chatbot và n8n automation
-
-Lưu ý: nên chuẩn bị ảnh chụp màn hình cho từng module trong folder `screenshots_by_module/` để trình bày dễ dàng hơn.
-
----
-
-## 16. Tóm tắt nhanh
-Dự án này là một hệ thống quản lý kho - QC - sản xuất thực tế, chạy trên PHP & MySQL, phù hợp cho mô hình nhà máy thực phẩm. Hệ thống cho phép người dùng:
-- quản lý tồn kho chi tiết,
-- kiểm tra chất lượng nguyên liệu,
-- cấp phát nguyên liệu theo FEFO,
-- theo dõi sản xuất và finished goods,
-- theo dõi báo cáo, analytics và tự động hóa qua n8n.
+```text
+F-G_Food-Inventory-Production-Management-System/
+├── .env                              # Environment configuration (API keys, webhooks)
+├── .gitignore                        # Git exclusion rules
+├── README.md                         # Project documentation and architectural manual
+├── Project2_db.sql                  # Primary MySQL schema definition
+├── seed_data.sql                    # Seed records (Products, Users, Batches, Shifts)
+├── automaticallyMail.n8n            # Legacy root workflow template
+├── backend/
+│   ├── api/                         # JSON API endpoints (Chatbot, Notifications, Live Search)
+│   ├── connection/                  # Database connectivity, login handlers, business actions
+│   │   ├── db_connect.php           # PDO connection handler
+│   │   ├── fix_pass.php             # Password hash resynchronization tool
+│   │   ├── process_login.php        # Role-based authentication processor
+│   │   └── process_request.php      # Material requisition lifecycle handler
+│   ├── controllers/                 # MVC Controllers (Stock, QC, MaterialRequest, Report)
+│   ├── helpers/                     # Helper functions (n8n Webhook dispatch, i18n translators)
+│   ├── lang/                        # Bilingual language dictionaries (en.php, vi.php)
+│   ├── models/                      # Database models (User, Stock, QC, Shift, Report)
+│   └── services/                    # Business service adapters (WeatherAPI, AI Gateway)
+├── frontend/
+│   ├── assets/                      # Static CSS stylesheets, JavaScript plugins, vendor libraries
+│   ├── includes/                    # Shared UI partials (header.php, sidebar.php, footer.php)
+│   ├── dashboard_director.php       # Director Executive Overview
+│   ├── dashboard_production.php     # Production Line & Yield Management
+│   ├── dashboard_warehouse.php      # Warehouse Inventory & In-Out Ledger
+│   ├── inventory.php                # Master Inventory Catalog
+│   ├── login.php                    # Role-based Secure Login Portal
+│   ├── production_FEFO.php          # FEFO Dispatch & Material Allocation Engine
+│   ├── qc_dashboard.php             # Quality Control Queue & Inspection Station
+│   └── warehouse_reports.php        # Movement Ledger & Waste Cost Reports
+├── n8n_workflows/                   # Automated webhook flows and deployment guides
+└── tests/                           # Python Selenium automated test suite & visual evidence
+    ├── run_all_tests.py             # Master test suite runner
+    ├── screenshots/                 # 100+ module execution visual evidence captures
+    └── test_module/                 # 10 independent test modules (Module 1 - 10)
+```
 
 ---
 
-## 17. Kết luận
-Nếu bạn muốn chạy demo thành công, hãy làm đúng ba bước quan trọng:
-1. Bật Apache + MySQL
-2. Import `Project2_db.sql` rồi `seed_data.sql`
-3. Truy cập vào đường dẫn login và đăng nhập với tài khoản demo
+## Troubleshooting & FAQ
 
-Đây là hệ thống có đủ yếu tố của một đồ án Capstone 2: nghiệp vụ thực tế, phân quyền, dashboard, báo cáo, AI, automation và triển khai web theo mô hình doanh nghiệp.
+<details>
+<summary><strong>1. Database connection fails with "Access denied for user 'root'@'localhost'"</strong></summary>
+
+* Open `backend/connection/db_connect.php`.
+* Ensure `$pass` is empty `""` (standard default for XAMPP) or set to your custom MySQL root password.
+* Verify port 3306 is not blocked by another local service.
+</details>
+
+<details>
+<summary><strong>2. Unable to log in with demo credentials (Password Verification Error)</strong></summary>
+
+* Ensure you imported `seed_data.sql` after `Project2_db.sql`.
+* If password hashes require resynchronization, run the database patch helper in your browser:
+  ```text
+  http://localhost/F-G_Food-Inventory-Production-Management-System/backend/connection/fix_pass.php
+  ```
+  This will reset passwords for all accounts to standard `123456`.
+</details>
+
+<details>
+<summary><strong>3. AI Chatbot responds with API error</strong></summary>
+
+* Verify that your `.env` file contains a valid `GROQ_API_KEY` or `GEMINI_API_KEY`.
+* Check that your internet connection is active and that API quotas have not been exceeded.
+</details>
+
+<details>
+<summary><strong>4. Selenium automated tests cannot find browser driver</strong></summary>
+
+* Make sure Google Chrome is installed on the testing host.
+* Install `webdriver-manager` to let Selenium automatically resolve matching ChromeDriver binaries:
+  ```bash
+  pip install webdriver-manager selenium
+  ```
+</details>
 
 ---
 
-## 18. Ghi chú người phát triển
-- Đây là dự án web theo mô hình backend PHP + frontend PHP + database MySQL.
-- Nếu cần nâng cấp lên production, nên thêm:
-  - validation dữ liệu mạnh hơn,
-  - bảo mật session / CSRF,
-  - role permission chuẩn hóa,
-  - logging audit,
-  - deployment trên Apache + production database.
+## License & Authors
 
----
+Distributed under the **MIT License**. See `LICENSE` for more information.
 
-## 19. Tài liệu liên quan
-- `Project2_db.sql`
-- `seed_data.sql`
-- `backend/connection/db_connect.php`
-- `backend/connection/process_login.php`
-- `frontend/login.php`
-- `n8n_workflows/`
-- `screenshots_by_module/`
+Developed by **[Cam Anh](https://github.com/hoangcamanh)** and the **F&G Food Systems Engineering Team** for the Capstone Project.
+For questions, security disclosures, or collaboration inquiries, please open an issue in the repository.
 
-Hy vọng README này sẽ giúp bạn và người khác dễ dàng cài đặt, sử dụng và bảo trì hệ thống một cách nhanh chóng, đúng quy trình và phù hợp với đồ án Capstone Project 2.
+<div align="center">
+<sub>Engineered with precision for modern food manufacturing and zero-waste logistics.</sub>
+</div>
